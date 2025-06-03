@@ -23,14 +23,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-x)w^ryh87p+-927stnj6uoa-u!#6%oo-said)n7q92^@l2=m5k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # Set to False for production
+import os
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'slot-antenna-prediction.onrender.com',  # Add your Render domain here
-    '.onrender.com',  # Allow all subdomains of onrender.com
 ]
+
+# Add the Render domain to allowed hosts
+if not DEBUG:
+    ALLOWED_HOSTS.extend([
+        'slot-antenna-prediction.onrender.com',
+        '.onrender.com',
+    ])
+
 
 
 # Application definition
