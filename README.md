@@ -1,2 +1,2 @@
-# Slot_Antenna_Pridiction
+# Slot_Antenna_Prediction
 Final Year Project
