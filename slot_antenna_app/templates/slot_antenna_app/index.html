@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slot Antenna Predictor</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+        --success-color: #27ae60;
+        --border-radius: 8px;
+        --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+        color: var(--dark-color);
+        line-height: 1.6;
+        padding: 0;
+      }
+
+      .header {
+        background: var(--primary-color);
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        box-shadow: var(--box-shadow);
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 2.2rem;
+      }
+
+      .header p {
+        margin-top: 0.5rem;
+        opacity: 0.8;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      @media (min-width: 992px) {
+        .container {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+      }
+
+      .card-header {
+        background: var(--primary-color);
+        color: white;
+        padding: 1rem 1.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+
+      .card-header i {
+        margin-right: 0.75rem;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .form-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      .form-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .form-section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+      }
+
+      .form-section-title i {
+        margin-right: 0.5rem;
+        color: var(--secondary-color);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      @media (min-width: 768px) {
+        .form-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark-color);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+        outline: none;
+      }
+
+      .input-group {
+        display: flex;
+        align-items: center;
+      }
+
+      .input-group-append {
+        background: #f8f9fa;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-left: none;
+        border-radius: 0 4px 4px 0;
+        color: #6c757d;
+        font-size: 0.9rem;
+      }
+
+      .form-control.with-unit {
+        border-radius: 4px 0 0 4px;
+      }
+
+      .btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 4px;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        color: #fff;
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+
+      .btn-primary:hover {
+        background-color: #2980b9;
+        border-color: #2980b9;
+      }
+
+      .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+      }
+
+      .btn-block {
+        display: block;
+        width: 100%;
+      }
+
+      .result {
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-top: 1rem;
+        border-left: 4px solid var(--success-color);
+      }
+
+      .result-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--dark-color);
+        display: flex;
+        align-items: center;
+      }
+
+      .result-title i {
+        margin-right: 0.5rem;
+        color: var(--success-color);
+      }
+
+      .prediction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 4px;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .prediction-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .prediction-label {
+        font-weight: 600;
+        color: var(--dark-color);
+        display: flex;
+        align-items: center;
+      }
+
+      .prediction-label i {
+        margin-right: 0.5rem;
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+      }
+
+      .prediction-value {
+        font-family: "Consolas", monospace;
+        font-weight: 600;
+        color: var(--secondary-color);
+        background: rgba(52, 152, 219, 0.1);
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 2rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+      }
+
+      .error {
+        color: var(--accent-color);
+        background: rgba(231, 76, 60, 0.1);
+        padding: 1rem;
+        border-radius: 4px;
+        margin-top: 1rem;
+        border-left: 4px solid var(--accent-color);
+      }
+
+      .help-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+      }
+
+      /* Tooltip styles */
+      .tooltip {
+        position: relative;
+        display: inline-block;
+        margin-left: 0.5rem;
+        color: #6c757d;
+      }
+
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 0.5rem;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.85rem;
+        font-weight: normal;
+      }
+
+      .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1>Slot Antenna Performance Predictor</h1>
+      <p>Enter antenna parameters to predict performance metrics</p>
+    </header>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-sliders-h"></i> Input Parameters
+        </div>
+        <div class="card-body">
+          <form method="post" id="antenna-form">
+            {% csrf_token %}
+            <input type="hidden" id="hidden_l3_outer" name="l3_outer" value="0">
+            <input type="hidden" id="hidden_l3_inner" name="l3_inner" value="0">
+            <input type="hidden" id="hidden_l4_outer" name="l4_outer" value="0">
+            <input type="hidden" id="hidden_l4_inner" name="l4_inner" value="0">
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <i class="fas fa-ruler"></i> Loop Configuration
+              </div>
+              <div class="form-group">
+                <label for="id_number_of_loop">
+                  Number of Loops
+                  <span class="tooltip"
+                    ><i class="fas fa-info-circle"></i>
+                    <span class="tooltiptext"
+                      >The number of loops in the antenna structure</span
+                    >
+                  </span>
+                </label>
+                <div class="input-group">
+                  <select
+                    name="number_of_loop"
+                    required
+                    id="id_number_of_loop"
+                    class="form-control with-unit"
+                  >
+                    <option value="2" {% if form.number_of_loop.value == '2' %}selected{% endif %}>2</option>
+                    <option value="4" {% if form.number_of_loop.value == '4' %}selected{% endif %}>4</option>
+                  </select>
+                  <span class="input-group-append">loops</span>
+                </div>
+                <div class="help-text">Select 2 or 4 loops</div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <i class="fas fa-expand-arrows-alt"></i> Loop Dimensions
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="id_l1_outer">
+                    L1 Outer
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Outer dimension of the 1st loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l1_outer"
+                      step="any"
+                      required
+                      id="id_l1_outer"
+                      class="form-control with-unit"
+                      value="{{ form.l1_outer.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="id_l1_inner">
+                    L1 Inner
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Inner dimension of the 1st loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l1_inner"
+                      step="any"
+                      required
+                      id="id_l1_inner"
+                      class="form-control with-unit"
+                      value="{{ form.l1_inner.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="id_l2_outer">
+                    L2 Outer
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Outer dimension of the 2nd loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l2_outer"
+                      step="any"
+                      required
+                      id="id_l2_outer"
+                      class="form-control with-unit"
+                      value="{{ form.l2_outer.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="id_l2_inner">
+                    L2 Inner
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Inner dimension of the 2nd loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l2_inner"
+                      step="any"
+                      required
+                      id="id_l2_inner"
+                      class="form-control with-unit"
+                      value="{{ form.l2_inner.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="id_l3_outer">
+                    L3 Outer
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Outer dimension of the 3rd loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l3_outer"
+                      step="any"
+                      required
+                      id="id_l3_outer"
+                      class="form-control with-unit"
+                      value="{{ form.l3_outer.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="id_l3_inner">
+                    L3 Inner
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Inner dimension of the 3rd loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l3_inner"
+                      step="any"
+                      required
+                      id="id_l3_inner"
+                      class="form-control with-unit"
+                      value="{{ form.l3_inner.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="id_l4_outer">
+                    L4 Outer
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Outer dimension of the 4th loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l4_outer"
+                      step="any"
+                      required
+                      id="id_l4_outer"
+                      class="form-control with-unit"
+                      value="{{ form.l4_outer.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="id_l4_inner">
+                    L4 Inner
+                    <span class="tooltip">
+                      <i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Inner dimension of the 4th loop</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="l4_inner"
+                      step="any"
+                      required
+                      id="id_l4_inner"
+                      class="form-control with-unit"
+                      value="{{ form.l4_inner.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">mm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <i class="fas fa-broadcast-tower"></i> Operating Parameters
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="id_frequency">
+                    Frequency
+                    <span class="tooltip"
+                      ><i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Operating frequency of the antenna</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="frequency"
+                      step="any"
+                      required
+                      id="id_frequency"
+                      class="form-control with-unit"
+                      value="{{ form.frequency.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">GHz</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="id_rl_depth">
+                    Return Loss Depth
+                    <span class="tooltip"
+                      ><i class="fas fa-info-circle"></i>
+                      <span class="tooltiptext"
+                        >Depth of return loss in dB</span
+                      >
+                    </span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      name="rl_depth"
+                      step="any"
+                      required
+                      id="id_rl_depth"
+                      class="form-control with-unit"
+                      value="{{ form.rl_depth.value|default_if_none:'' }}"
+                    />
+                    <span class="input-group-append">dB</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              <i class="fas fa-calculator"></i> Calculate Performance
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-chart-line"></i> Prediction Results
+        </div>
+        <div class="card-body">
+          {% if prediction %}
+          <div class="result">
+            <div class="result-title">
+              <i class="fas fa-check-circle"></i> Predicted Performance Metrics
+            </div>
+
+            {% for label, value in prediction %}
+            <div class="prediction-item">
+              <span class="prediction-label">
+                {% if 'Bandwidth' in label %}
+                <i class="fas fa-arrows-alt-h"></i>
+                {% elif 'Efficiency' in label %}
+                <i class="fas fa-bolt"></i>
+                {% elif 'Gain' in label %}
+                <i class="fas fa-signal"></i>
+                {% elif 'F/B' in label %}
+                <i class="fas fa-exchange-alt"></i>
+                {% endif %} {{ label }}
+              </span>
+              <span class="prediction-value">
+                {% if 'Gain' in label or 'F/B' in label %}
+                {{value|floatformat:2}} {% else %} {{ value|floatformat:1 }}%
+                {%endif %}
+              </span>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div style="padding: 3rem 1rem">
+            <i
+              class="fas fa-chart-bar"
+              style="
+                font-size: 3rem;
+                color: #ddd;
+                margin-bottom: 1rem;
+                display: block;
+              "
+            ></i>
+            <p style="color: #6c757d">
+              Enter antenna parameters and click Calculate to see prediction
+              results
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>
+        Slot Antenna Performance Predictor &copy; {% now "Y" %} | Developed for
+        Antenna Engineering Applications
+      </p>
+    </footer>
+  </body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    function updateLoopFields() {
+      var numLoops = document.getElementById("id_number_of_loop").value;
+      var l3Fields = document.querySelectorAll('[name^="l3_"]');
+      var l4Fields = document.querySelectorAll('[name^="l4_"]');
+      l3Fields.forEach(function (field) {
+        var formGroup = field.closest(".form-group");
+        if (formGroup) formGroup.style.display = numLoops >= 3 ? "" : "none";
+        // If hiding, set value to 0
+        if (numLoops < 3) field.value = 0;
+      });
+      l4Fields.forEach(function (field) {
+        var formGroup = field.closest(".form-group");
+        if (formGroup) formGroup.style.display = numLoops == 4 ? "" : "none";
+        // If hiding, set value to 0
+        if (numLoops != 4) field.value = 0;
+      });
+      // Always ensure hidden fields for l3/l4 exist and are set to 0 if not visible
+      ["l3_outer","l3_inner","l4_outer","l4_inner"].forEach(function(name) {
+        var input = document.getElementById("id_"+name);
+        var hidden = document.getElementById("hidden_"+name);
+        if (input && input.closest(".form-group").style.display === "none") {
+          if (!hidden) {
+            hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.name = name;
+            hidden.id = "hidden_"+name;
+            input.form.appendChild(hidden);
+          }
+          hidden.value = 0;
+        } else if (hidden) {
+          hidden.parentNode.removeChild(hidden);
+        }
+      });
+    }
+    var loopSelect = document.getElementById("id_number_of_loop");
+    if (loopSelect) {
+      loopSelect.addEventListener("change", updateLoopFields);
+      updateLoopFields();
+    }
+  });
+</script>
