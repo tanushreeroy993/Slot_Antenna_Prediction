@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Slot Antenna Predictor
 
 A Django web application for predicting slot antenna parameters using a machine learning model.
@@ -77,3 +78,7 @@ GitHub Pages does not support Django directly. For static frontend-only demos, e
 ## License
 
 MIT
+=======
+# Slot_Antenna_Prediction
+Final Year Project
+>>>>>>> 8aed6cede25ba1c1d201b3c0449760aed7bf859e
